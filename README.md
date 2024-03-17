@@ -51,3 +51,24 @@ Test your new function; I've provided some basic testing code in `code.test.js`.
 What is the worst-case asymptotic time complexity of your implementation? What
 is the worst-case asymptotic memory complexity? Add your answer, including your
 reasoning, to this markdown file.
+
+
+## Runtime Analysis of TSP Local Search Implementation Using 2-opt Algorithm
+
+### Time Complexity Analysis:
+- **Initial Route Generation**: The generation and shuffling of the initial route have a linear complexity $O(n)$, as it involves iterating over each city once.
+- **Distance Calculation**: Calculating the total distance of a route is also linear $O(n)$, due to the iteration over consecutive city pairs in the route.
+- **2-opt Swap**: Each swap operation, where a route segment is reversed, runs in $O(n)$ in the worst case when reversing a significant portion of the route. This function is key for exploring new routes that might provide a shorter total distance.
+- **Main Algorithm**: The crucial part to the algorithm is the iterative improvement process. For each iteration, potentially $O(n^2)$ 2-opt-swaps must be considered (all possible $(i, k)$ pairs). If each swap's impact is assessed by recalculating the total route distance $O(n)$, the per-iteration complexity reaches $O(n^3)$ in the worst case.
+
+Based on the iterative nature and depending on the stopping criteria's design (e.g., a fixed number of iterations, or until no improvement is found), the total time complexity for the entire process typically reaches $Θ(n^3)$ in the worst case scenario.
+
+### Memory Complexity Analysis:
+- **Distance Matrix Storage**: The largest fixed memory requirement is the storage of the distance matrix, with a complexity of $O(n^2)$.
+- **Route Storage**: The 2-opt algorithm uses space equivalent to the number of cities, $O(n)$, for tracking both the current route and any alternatives considered during swaps. This is crucial for comparing routes and deciding on improvements.
+
+### Conclusion:
+- **Worst-Case Time Complexity**: Potentially $Θ(n^3)$ per iteration, largely dependent on the implementation of the iterative improvement process and stopping criteria.
+- **Worst-Case Memory Complexity**: $Θ(n^2)$, dominated by the storage requirements for the distance matrix.
+
+
