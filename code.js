@@ -1,15 +1,15 @@
 function generateInitialRoute(n) {
-    // Generate a random initial route
+    // O(n): Generate and shuffle the initial route.
     const route = Array.from({length: n}, (_, i) => i);
     for (let i = n - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [route[i], route[j]] = [route[j], route[i]];
+        [route[i], route[j]] = [route[j], route[i]];  // Fisher-Yates shuffle algorithm
     }
     return route;
 }
 
 function calculateTotalDistance(route, distance_matrix) {
-    // Calculate the total distance of a given route
+    // O(n): calculate total distance of the route.
     let totalDistance = 0;
     for (let i = 0; i < route.length - 1; i++) {
         totalDistance += distance_matrix[route[i]][route[i + 1]];
@@ -18,12 +18,13 @@ function calculateTotalDistance(route, distance_matrix) {
 }
 
 function twoOptSwap(route, i, k) {
-    // Perform a 2-opt swap by reversing segment between i and k
+    // O(n) complexity for reversing a segment: performs a 2-opt swap by reversing segment between i and k to explore new routes
     const newRoute = [...route.slice(0, i), ...route.slice(i, k + 1).reverse(), ...route.slice(k + 1)];
     return newRoute;
 }
 
 function tsp_ls(distance_matrix) {
+    // Potential O(n^3) complexity: Iterate over all possible swaps
     const n = distance_matrix.length;
     if (n <= 2) return 0; // For 1 or 2 cities, the route is trivial
 
