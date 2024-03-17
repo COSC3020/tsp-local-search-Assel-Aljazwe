@@ -1,15 +1,15 @@
 function generateInitialRoute(n) {
-    // O(n) - Generate a random initial route
-    let route = Array.from({ length: n }, (_, i) => i);
+    // Generate a random initial route
+    const route = Array.from({length: n}, (_, i) => i);
     for (let i = n - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [route[i], route[j]] = [route[j], route[i]]; // Swap
+        [route[i], route[j]] = [route[j], route[i]];
     }
     return route;
 }
 
-function calculateRouteLength(route, distance_matrix) {
-    // O(n) - calculate total length of a route
+function calculateTotalDistance(route, distance_matrix) {
+    // Calculate the total distance of a given route
     let totalDistance = 0;
     for (let i = 0; i < route.length - 1; i++) {
         totalDistance += distance_matrix[route[i]][route[i + 1]];
@@ -17,49 +17,42 @@ function calculateRouteLength(route, distance_matrix) {
     return totalDistance;
 }
 
+function twoOptSwap(route, i, k) {
+    // Perform a 2-opt swap by reversing segment between i and k
+    const newRoute = [...route.slice(0, i), ...route.slice(i, k + 1).reverse(), ...route.slice(k + 1)];
+    return newRoute;
+}
+
 function tsp_ls(distance_matrix) {
     const n = distance_matrix.length;
-    let route = generateInitialRoute(n); // Random initial route
-    let bestLength = calculateRouteLength(route, distance_matrix);
-    let improvement = true;
-    const maxIterationsWithoutImprovement = 1000; // Stopping criterion
-    let iterationsWithoutImprovement = 0;
+    if (n <= 2) return 0; // For 1 or 2 cities, the route is trivial
 
-    while (improvement) {
-        improvement = false;
+    let route = generateInitialRoute(n);
+    let bestDistance = calculateTotalDistance(route, distance_matrix);
+    let improved = true;
 
-        // Nested loops contribute to O(n^2) complexity per iteration
-        for (let i = 1; i < n - 1 && iterationsWithoutImprovement < maxIterationsWithoutImprovement; i++) {
-            for (let k = i + 1; k < n && iterationsWithoutImprovement < maxIterationsWithoutImprovement; k++) {
-                let newRoute = 2optSwap(route, i, k); // O(n) - Performs the 2-opt swap
-                let newLength = calculateRouteLength(newRoute, distance_matrix);
+  // Stop when no improvement is found after a full iteration over all possible swaps
+    while (improved) {
+        improved = false;
 
-                // check for improvement to update best route found
-                if (newLength < bestLength) {
+        for (let i = 1; i < n - 2; i++) {
+            for (let k = i + 1; k < n - 1; k++) {
+                const newRoute = twoOptSwap(route, i, k);
+                const newDistance = calculateTotalDistance(newRoute, distance_matrix);
+
+                if (newDistance < bestDistance) {
                     route = newRoute;
-                    bestLength = newLength;
-                    improvement = true;
-                    iterationsWithoutImprovement = 0; // Reset counter on improvement
-                } else {
-                    iterationsWithoutImprovement++;
+                    bestDistance = newDistance;
+                    improved = true;
+                    break; // Exit early for the first improvement found
                 }
             }
-        }
-
-        if (!improvement) {
-            break; // Exit loop if no improvement found
+            if (improved) break; // Restart the search for further improvements
         }
     }
 
-    return bestLength; // returns length of the shortest tour found
+    return bestDistance;
 }
 
-function 2optSwap(route, i, k) {
-    // O(n) - reverses the route between i and k
-    const newRoute = [
-        ...route.slice(0, i),
-        ...route.slice(i, k + 1).reverse(),
-        ...route.slice(k + 1)
-    ];
-    return newRoute;
-}
+
+
