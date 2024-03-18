@@ -65,10 +65,13 @@ Based on the iterative nature and depending on the stopping criteria's design (e
 
 ### Memory Complexity Analysis:
 - **Distance Matrix Storage**: The largest fixed memory requirement is the storage of the distance matrix, with a complexity of $O(n^2)$.
+  - **Memory Allocation for Distance Matrix**: The implementation doesn't allocate memory for the distance matrix internally, instead it assumes the matrix is already created and passed to it as an input. However, the memory used to store this input matrix is still considered as part of the algorithm's overall memory complexity because without the data, the algorithm can't function. 
 - **Route Storage**: The 2-opt algorithm uses space equivalent to the number of cities, $O(n)$, for tracking both the current route and any alternatives considered during swaps. This is crucial for comparing routes and deciding on improvements.
 
 ### Conclusion:
 - **Worst-Case Time Complexity**: Potentially $Θ(n^3)$ per iteration, largely dependent on the implementation of the iterative improvement process and stopping criteria.
-- **Worst-Case Memory Complexity**: $Θ(n^2)$, dominated by the storage requirements for the distance matrix.
+- **Worst-Case Memory Complexity**: $Θ(n^2)$, dominated by the storage requirements for the distance matrix, vital for the algorithm's functionality.
+
+  - (The implementation does not internally allocate memory for the matrix, it assumes its already created and passed as input (tsp_ls(distance_matrix)) - it's still included in overall memory complexity).
 
 
